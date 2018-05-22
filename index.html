@@ -1,0 +1,268 @@
+<!-- START SIGMA IMPORTS -->
+<meta charset="UTF-8">
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<script src="sigma.js-1.2.1/src/sigma.core.js"></script>
+<script src="sigma.js-1.2.1/src/conrad.js"></script>
+<script src="sigma.js-1.2.1/src/utils/sigma.utils.js"></script>
+<script src="sigma.js-1.2.1/src/utils/sigma.polyfills.js"></script>
+<script src="sigma.js-1.2.1/src/sigma.settings.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.dispatcher.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.configurable.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.graph.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.camera.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.quad.js"></script>
+<script src="sigma.js-1.2.1/src/classes/sigma.classes.edgequad.js"></script>
+<script src="sigma.js-1.2.1/src/captors/sigma.captors.mouse.js"></script>
+<script src="sigma.js-1.2.1/src/captors/sigma.captors.touch.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/sigma.renderers.canvas.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/sigma.renderers.webgl.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/sigma.renderers.svg.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/sigma.renderers.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.utils.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.edges.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.labels.def.js"></script>
+<script src="sigma.js-1.2.1/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+<script src="sigma.js-1.2.1/src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="sigma.js-1.2.1/src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="sigma.js-1.2.1/src/misc/sigma.misc.animation.js"></script>
+<script src="sigma.js-1.2.1/src/misc/sigma.misc.bindEvents.js"></script>
+<script src="sigma.js-1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
+<script src="sigma.js-1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<script src="sigma.js-1.2.1/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+<script src="sigma.js-1.2.1/plugins/sigma.plugins.neighborhoods/sigma.plugins.neighborhoods.js"></script>
+<script src="sigma.js-1.2.1/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
+<script src="sigma.js-1.2.1/plugins/sigma.layout.forceAtlas2/worker.js"></script>
+<script src="jquery-2.1.1.min.js"></script>
+<div id="container">
+  <style>
+    body {
+      background-color: #455660;
+    }
+    #search {
+      z-index: 9999;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      padding: 5px;
+      margin: 0px;
+      width: 20%;
+      height: 10%;
+      fill: #455660;
+    }
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      background-color: #455660;
+    }
+    .sigma-edge {
+      stroke: #14191C;
+    }
+    .sigma-node {
+      stroke: #14191C;
+      stroke-width: 2px;
+    }
+    .sigma-node:hover {
+      fill: blue;
+    }
+    .muted {
+      fill-opacity: 0.1;
+      stroke-opacity: 0.1;
+    }
+  </style>
+  <div id="search">
+    <input type="text" name="search" placeholder="搜索QQ号">
+    <input id="submit" type="button" name="submit" value="搜索">
+    <div id="hint" style="text-align: left; color: #eee; font-size: 10px">
+      <p>就不要吐槽搜索框了，实在懒</p>
+      <p>双击可查看此人的好友关系</p>
+    </div>
+  </div>
+  <div id="graph-container"></div>
+</div>
+<script>
+/**
+ * This is a basic example of how one could spawn a freestyle svg renderer
+ * to achieve his/her goal through css and jQuery to display fancy graphs
+ * but somewhat less performant.
+ */
+var i,
+    s,
+    N = 5,
+    E = 10,
+    g = {
+      nodes: [],
+      edges: []
+    };
+
+// Generate a random graph:
+
+$.getJSON ("my_data.json", function (data)  
+        {  
+            $.each (data.nodes, function (j, item)  
+            {  
+              g.nodes.push({
+                id: item.id,
+                label: item.lable,
+                size: item.size,
+                color: item.color,
+                x: item.x,
+                y: item.y
+              });
+            });
+
+            $.each (data.edges, function (j, item)
+            {
+                g.edges.push({
+                  id: item.id,
+                  source: item.source,
+                  target: item.target,
+                  size: item.size * 6,
+                  color: '#ccc'
+                });
+            });
+            s = new sigma({
+              graph: g,
+              settings: {
+                doubleClickEnabled: false,
+                enableHovering: false
+              }
+            });
+
+            s.addRenderer({
+              id: 'main',
+              type: 'svg',
+              container: document.getElementById('graph-container'),
+              freeStyle: true
+            });
+
+            s.refresh();
+
+            // Binding silly interactions
+            function mute(node) {
+              if (!~node.getAttribute('class').search(/muted/))
+                node.setAttributeNS(null, 'class', node.getAttribute('class') + ' muted');
+            }
+
+            function unmute(node) {
+              node.setAttributeNS(null, 'class', node.getAttribute('class').replace(/(\s|^)muted(\s|$)/g, '$2'));
+            }
+
+            $('.sigma-node').click(function() {
+
+              // Muting
+              $('.sigma-node, .sigma-edge').each(function() {
+                mute(this);
+              });
+
+              // Unmuting neighbors
+              var neighbors = s.graph.neighborhood($(this).attr('data-node-id'));
+              neighbors.nodes.forEach(function(node) {
+                unmute($('[data-node-id="' + node.id + '"]')[0]);
+              });
+
+              neighbors.edges.forEach(function(edge) {
+                unmute($('[data-edge-id="' + edge.id + '"]')[0]);
+              });
+            });
+
+            s.bind('clickStage', function() {
+              $('.sigma-node, .sigma-edge').each(function() {
+                unmute(this);
+              });
+            });
+            var dragListener = sigma.plugins.dragNodes(s, s.renderers['main']);
+            console.log(dragListener);
+
+            dragListener.bind('startdrag', function(event) {
+              console.log(event);
+            });
+            dragListener.bind('drag', function(event) {
+              console.log(event);
+            });
+            dragListener.bind('drop', function(event) {
+              console.log(event);
+            });
+            dragListener.bind('dragend', function(event) {
+              console.log(event);
+            });
+
+
+
+            //自行经行混淆，可以考虑一下混淆+jsfuck
+            $('#submit').click(function(){
+              qq = document.getElementsByName("search")[0].value;
+              salt = '666666'
+              $(".sigma-node").each(function(i, item){
+                if(item.getAttribute('data-node-id')==md5(qq+salt)){
+                  unmute(item);
+                }else{
+                  mute(item);
+                }
+              });
+              $(".sigma-edge").each(function(i, item){
+                mute(item);
+              });
+            });
+
+        });
+
+console.log(g);
+// for (i = 0; i < N; i++)
+//   g.nodes.push({
+//     id: 'n' + i,
+//     label: 'Node ' + i,
+//     x: Math.random(),
+//     y: Math.random(),
+//     size: 6,
+//     color: '#7299a7'
+//   });
+
+// for (i = 0; i < E; i++)
+//   g.edges.push({
+//     id: 'e' + i,
+//     source: 'n' + (Math.random() * N | 0),
+//     target: 'n' + (Math.random() * N | 0),
+//     size: Math.random(),
+//     color: '#ccc'
+//   });
+
+// Instantiate sigma:
+</script>
+
+<script>
+  var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) != -1) {
+            alert("手机只能看到一张图，电脑端体验较佳。")
+            break;
+        }
+    }
+</script>
