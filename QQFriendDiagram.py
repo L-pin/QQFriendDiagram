@@ -170,7 +170,7 @@ def getFriends():
 		likes = soup.select('.user-list > a')
 		for like in likes:
 			uin = str(like.get('href').split('/')[-1])
-			#name = '%s\n(%s***%s)' % (like.text, str(uin[:3]), str(uin[6:]))	#非你好友的点赞人员若也要爬取，需要取消注释此句
+			name = '%s\n(%s***%s)' % (like.text, str(uin[:3]), str(uin[6:]))
 
 			#此条件只爬取你们的共同好友，若要爬取非你的好友的需要删除 and (uin in all_qq[0])  条件
 			if (uin not in friend_list[index]['friends']) and (uin in all_qq[0]):
@@ -265,7 +265,6 @@ all_qq, friend_list = getFriends()
 # print(all_qq)
 # print('-'*20)
 # print(friend_list)
-
 saveData(all_qq, friend_list)
 
 webbrowser.open('http://127.0.0.1:6666')
